@@ -160,8 +160,24 @@ async function seedIncome(client) {
   }
 }
 
+async function dropTables(client) {
+  try {
+    await client.sql`DROP TABLE IF EXISTS invoices CASCADE;`;
+    await client.sql`DROP TABLE IF EXISTS sellers CASCADE;`;
+    await client.sql`DROP TABLE IF EXISTS users CASCADE;`;
+    await client.sql`DROP TABLE IF EXISTS income CASCADE;`;
+
+    console.log('Dropped all tables');
+  } catch (error) {
+    console.error('Error dropping tables:', error);
+    throw error;
+  }
+}
+
 async function main() {
   const client = await db.connect();
+
+  await dropTables(client);
 
   await seedUsers(client);
   await seedSellers(client);
